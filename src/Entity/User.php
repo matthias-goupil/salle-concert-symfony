@@ -39,9 +39,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 2083, nullable: true)]
     private ?string $profilePicture = null;
 
-    #[ORM\Column(length: 15, options: ["default" => "USER"])]
-    private ?string $role = null;
-
     #[ORM\OneToMany(mappedBy: 'userReservation', targetEntity: Reservation::class, orphanRemoval: true)]
     private Collection $reservations;
 
@@ -156,18 +153,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setProfilePicture(?string $profilePicture): self
     {
         $this->profilePicture = $profilePicture;
-
-        return $this;
-    }
-
-    public function getRole(): ?string
-    {
-        return $this->role;
-    }
-
-    public function setRole(string $role): self
-    {
-        $this->role = $role;
 
         return $this;
     }
