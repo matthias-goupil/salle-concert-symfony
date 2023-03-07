@@ -44,6 +44,10 @@ class Concert
     #[ORM\OneToMany(mappedBy: 'concert', targetEntity: Opinion::class, orphanRemoval: true)]
     private Collection $opinions;
 
+    #[ORM\ManyToOne(inversedBy: 'concerts')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?ConcertHall $concertHall = null;
+
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
@@ -195,6 +199,18 @@ class Concert
                 $opinion->setConcert(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getConcertHall(): ?ConcertHall
+    {
+        return $this->concertHall;
+    }
+
+    public function setConcertHall(?ConcertHall $concertHall): self
+    {
+        $this->concertHall = $concertHall;
 
         return $this;
     }

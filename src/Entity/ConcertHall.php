@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ConcertHallRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -22,6 +24,14 @@ class ConcertHall
 
     #[ORM\Column(length: 500)]
     private ?string $adress = null;
+
+    #[ORM\OneToMany(mappedBy: 'concertHall', targetEntity: Concert::class, orphanRemoval: true)]
+    private Collection $concerts;
+
+    public function __construct()
+    {
+        $this->concerts = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -60,6 +70,36 @@ class ConcertHall
     public function setAdress(string $adress): self
     {
         $this->adress = $adress;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Concert>
+     */
+    public function getConcerts(): Collection
+    {
+        return $this->concerts;
+    }
+
+    public function addConcert(Concert $concert): self
+    {
+        if (!$this->concerts->contains($concert)) {
+            $this->concerts->add($concert);
+            $concert->setConcertHall($this);
+        }
+
+        return $this;
+    }
+
+    public function removeConcert(Concert $concert): self
+    {
+        if ($this->concerts->removeElement($concert)) {
+            // set the owning side to null (unless already changed)
+            if ($concert->getConcertHall() === $this) {
+                $concert->setConcertHall(null);
+            }
+        }
 
         return $this;
     }
