@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New User{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_ADMIN')%}
+        <div class="admin-bar">
+            <a href="{{ path('app_user_index') }}">Liste des utilisateurs</a>
+        </div>
+    {% endif %}
+    <h1>Inscrivez-vous</h1>
+
+    {{ include('user/_form.html.twig') }}
+
+{% endblock %}

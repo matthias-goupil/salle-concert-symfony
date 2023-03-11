@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User index{% endblock %}
+
+{% block body %}
+    <h1>Mes groupes favoris</h1>
+        {% for music_group in app.user.likedMusicGroups %}
+            <a href="{{ path('app_music_group_show', {'id': music_group.id}) }}" class="concert">
+                <div>
+                    <img src="/media/{{ music_group.picture!=null?music_group.getPicture():'aucun.png' }}">
+                </div>
+                {#                <a href="{{ path('app_music_group_edit', {'id': music_group.id}) }}">modifier</a>#}
+                <p>{{ music_group.stageName }}</p>
+            </a>
+        {% else %}
+            <tr>
+                <td colspan="8">Aucun groupe</td>
+            </tr>
+        {% endfor %}
+{% endblock %}
