@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New MusicGroup{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_ADMIN')%}
+    <div class="admin-bar">
+        <a href="{{ path('app_music_group_index') }}">Liste des groupes de musiques</a>
+    </div>
+    {% endif %}
+    <h1>Créer un groupe de musique</h1>
+
+    {{ include('music_group/_form.html.twig') }}
+
+{% endblock %}

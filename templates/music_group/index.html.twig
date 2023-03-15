@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MusicGroup index{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_ADMIN')%}
+    <div class="admin-bar">
+        <a href="{{ path('app_music_group_new') }}">Ajouter un groupe de musique</a>
+    </div>
+    {% endif %}
+    <h1>Liste des groupe de musiques</h1>
+    <div class="musicGroups">
+        {% for music_group in music_groups %}
+            <a href="{{ path('app_music_group_show', {'id': music_group.id}) }}" class="concert">
+                <div>
+                    <img src="/media/{{ music_group.picture!=null?music_group.getPicture():'aucun.png' }}">
+                </div>
+{#                <a href="{{ path('app_music_group_edit', {'id': music_group.id}) }}">modifier</a>#}
+                <p>{{ music_group.stageName }}</p>
+            </a>
+        {% else %}
+            <tr>
+                <td colspan="5">Aucun groupe d'eneregistré</td>
+            </tr>
+        {% endfor %}
+    </div>
+{% endblock %}

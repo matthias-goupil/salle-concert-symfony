@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ConcertHall index{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_ADMIN')%}
+
+    <div class="admin-bar">
+        <a href="{{ path('app_concert_hall_new') }}">Ajouter une salle de concert</a>
+    </div>
+    {% endif %}
+
+    <h1>Liste des salles de concert</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Description</th>
+                <th>Photos</th>
+                <th>Adress</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for concert_hall in concert_halls %}
+            <tr>
+                <td>{{ concert_hall.id }}</td>
+                <td>{{ concert_hall.description }}</td>
+                <td>{{ concert_hall.photos ? concert_hall.photos|join(', ') : '' }}</td>
+                <td>{{ concert_hall.adress }}</td>
+                <td>
+                    <a href="{{ path('app_concert_hall_show', {'id': concert_hall.id}) }}">show</a>
+                    <a href="{{ path('app_concert_hall_edit', {'id': concert_hall.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Concert index{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_ADMIN')%}
+
+    <div class="admin-bar">
+        <a href="{{ path('app_concert_new') }}">Ajouter un concert</a>
+    </div>
+    {% endif %}
+    <h1>Liste des concerts</h1>
+    <div class="concerts">
+        {% for concert in concerts %}
+            <a href="{{ path('app_concert_show', {'id': concert.id}) }}" class="concert">
+                <div>
+                    <img src="/media/{{ concert.picture!=null?concert.getPicture():'aucun.png' }}">
+                </div>
+                <p>{{ concert.musicGroup.stageName }}</p>
+                <p>Le {{ concert.date |date('d-m-Y') }}</p>
+            </a>
+        {% endfor %}
+    </div>
+
+{% endblock %}

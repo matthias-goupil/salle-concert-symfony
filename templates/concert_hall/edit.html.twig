@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit ConcertHall{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_ADMIN')%}
+
+    <div class="admin-bar">
+        <a href="{{ path('app_concert_hall_index') }}">Liste des salle de concert</a>
+        <a href="{{ path('app_concert_hall_show', {'id': concert_hall.id}) }}">montrer</a>
+        {{ include('concert_hall/_delete_form.html.twig') }}
+    </div>
+    {% endif %}
+    <h1>Modifier la salle de concert</h1>
+
+    {{ include('concert_hall/_form.html.twig', {'button_label': 'Update'}) }}
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Concert{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_ADMIN') %}
+
+        <div class="admin-bar">
+            <a href="{{ path('app_concert_index') }}">Liste des concerts</a>
+            <a href="{{ path('app_concert_edit', {'id': concert.id}) }}">modifier</a>
+            {{ include('concert/_delete_form.html.twig') }}
+        </div>
+
+    {% endif %}
+
+    <div class="flex-row concert-show">
+        <img src="/media/{{ concert.picture }}"/>
+        <div class="flex-column">
+            <h1>Concert de {{ concert.musicGroup.stageName }}</h1>
+            <p>{{ concert.description }}</p>
+            <p>Le {{ concert.date ? concert.date|date('Y-m-d H:i:s') : '' }}</p>
+            <p>Prix : {{ concert.price }}</p>
+            <p>Nombre de places dispo : {{ concert.placeNumberAvailable }}</p>
+            <p>Adresse de la salle : <br> {{ concert.concertHall.adress }}</p>
+
+        </div>
+    </div>
+
+    <h2>Groupe</h2>
+    <a href="{{ path('app_music_group_show', {'id': concert.musicGroup.id}) }}" class="concert">
+        <div>
+            <img src="/media/{{ concert.musicGroup.picture!=null?concert.musicGroup.getPicture():'aucun.png' }}">
+        </div>
+        <p>{{ concert.musicGroup.stageName }}</p>
+    </a>
+{% endblock %}
+
+{%  block footer%}
+    <p>{{ concert.concertHall.adress }}</p>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ConcertHall{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="admin-bar">
+            <a href="{{ path('app_concert_hall_index') }}">Liste des salles de concert</a>
+            <a href="{{ path('app_concert_hall_edit', {'id': concert_hall.id}) }}">modifier</a>
+            {{ include('concert_hall/_delete_form.html.twig') }}
+        </div>
+    {% endif %}
+
+
+<h1>Salle de concert {{ concert_hall.id }}</h1>
+<p>{{ concert_hall.description }}</p>
+<p>{{ concert_hall.adress }}</p>
+<h4>Concerts à venir</h4>
+<div class="concerts">
+
+    {% for concert in concert_hall.concerts | filter(c => c.date |date('U') >= "now"|date('U')) %}
+        <a href="{{ path('app_concert_show', {'id': concert.id}) }}" class="concert">
+            <div>
+                <img src="/media/{{ concert.picture!=null?concert.getPicture():'aucun.png' }}">
+            </div>
+            <p>{{ concert.musicGroup.stageName }}</p>
+            <p>Le {{ concert.date |date('d-m-Y') }}</p>
+        </a>
+    {% else %}
+        <p>Aucun concert de prévu pour le moment</p>
+    {% endfor %}
+</div>
+<h4>Anciens concerts </h4>
+<div class="concerts">
+    {% for concert in concert_hall.concerts | filter(c => c.date |date('U') < "now"|date('U')) %}
+        <a href="{{ path('app_concert_show', {'id': concert.id}) }}" class="concert">
+            <div>
+                <img src="/media/{{ concert.picture!=null?concert.getPicture():'aucun.png' }}">
+            </div>
+            <p>{{ concert.musicGroup.stageName }}</p>
+            <p>Le {{ concert.date |date('d-m-Y') }}</p>
+        </a>
+    {% else %}
+        <p>Aucun concert de prévu pour le moment</p>
+    {% endfor %}
+</div>
+
+{% endblock %}
+{%  block footer%}
+    <p>{{ concert_hall.adress }}</p>
+{% endblock %}

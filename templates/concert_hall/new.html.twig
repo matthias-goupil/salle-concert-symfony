@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New ConcertHall{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_ADMIN')%}
+
+    <div class="admin-bar">
+        <a href="{{ path('app_concert_hall_index') }}">Liste des salles de concert</a>
+    </div>
+    {% endif %}
+    <h1>Créer une salle de concert</h1>
+
+    {{ include('concert_hall/_form.html.twig') }}
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello AppController!{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_USER') %}
+        <h1>Bonjour {{ app.user.firstname }}</h1>
+    {% endif %}
+
+    {% for hall in concert_halls %}
+        <h2>Chez {{ hall.adress }}</h2>
+        <h4>Concerts à venir</h4>
+        <div class="concerts">
+
+            {% for concert in hall.concerts | filter(c => c.date |date('U') >= "now"|date('U'))%}
+                    <a href="{{ path('app_concert_show', {'id': concert.id}) }}" class="concert">
+                        <div>
+                            <img src="/media/{{ concert.picture!=null?concert.getPicture():'aucun.png' }}">
+                        </div>
+                        <p>{{ concert.musicGroup.stageName }}</p>
+                        <p>Le {{ concert.date |date('d-m-Y') }}</p>
+                    </a>
+            {% else %}
+                <p>Aucun concert de prévu pour le moment</p>
+            {% endfor %}
+        </div>
+        <h4>Anciens concerts </h4>
+        <div class="concerts">
+            {% for concert in hall.concerts | filter(c => c.date |date('U') < "now"|date('U'))%}
+                <a href="{{ path('app_concert_show', {'id': concert.id}) }}" class="concert">
+                    <div>
+                        <img src="/media/{{ concert.picture!=null?concert.getPicture():'aucun.png' }}">
+                    </div>
+                    <p>{{ concert.musicGroup.stageName }}</p>
+                    <p>Le {{ concert.date |date('d-m-Y') }}</p>
+                </a>
+            {% else %}
+                <p>Aucun concert de prévu pour le moment</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endblock %}

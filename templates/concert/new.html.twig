@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Concert{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_ADMIN')%}
+
+    <div class="admin-bar">
+        <a href="{{ path('app_concert_index') }}">Liste des concerts</a>
+    </div>
+    {% endif %}
+    <h1>Créer un concert</h1>
+
+    {{ include('concert/_form.html.twig') }}
+
+{% endblock %}

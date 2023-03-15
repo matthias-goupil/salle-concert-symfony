@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Concert{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_ADMIN')%}
+
+    <div class="admin-bar">
+        <a href="{{ path('app_concert_index') }}">Liste des concerts</a>
+        <a href="{{ path('app_concert_show', {'id': concert.id}) }}">montrer</a>
+        {{ include('concert/_delete_form.html.twig') }}
+    </div>
+    {% endif %}
+    <h1>Modifier un concert</h1>
+
+    {{ include('concert/_form.html.twig', {'button_label': 'Update'}) }}
+
+{% endblock %}

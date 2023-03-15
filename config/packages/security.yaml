@@ -4,14 +4,23 @@ security:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
-        users_in_memory: { memory: null }
+        # used to reload user from session & other features (e.g. switch_user)
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             lazy: true
-            provider: users_in_memory
+            provider: app_user_provider
+            custom_authenticator: App\Security\AppAuthenticator
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -22,9 +31,35 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        # Artist Access
+         - { path: /artist/new, roles: ROLE_ADMIN }
+         - { path: ^/artist/[0-9]+, roles: ROLE_ADMIN, methods: [POST] }
+         - { path: ^/artist/[0-9]+/edit, roles: ROLE_ADMIN }
 
+
+        # Concert Access
+         - { path: ^/concert/new, roles: ROLE_ADMIN }
+         - { path: ^/concert/[0-9]+/edit, roles: ROLE_ADMIN }
+         - { path: ^/concert/[0-9]+, roles: ROLE_ADMIN, methods: [POST]}
+
+        # ConcertHall Access
+         - { path: ^/concertHall/new, roles: ROLE_ADMIN }
+         - { path: ^/concertHall/[0-9]+/edit, roles: ROLE_ADMIN }
+         - { path: ^/concertHall/[0-9]+, roles: ROLE_ADMIN, methods: [POST]}
+
+        # MusicGroup Access
+         - { path: ^/musicGroup/new, roles: ROLE_ADMIN }
+         - { path: ^/musicGroup/favory/add/[0-9]+, roles: ROLE_USER }
+         - { path: ^/musicGroup/favory/remove/[0-9]+, roles: ROLE_USER }
+         - { path: ^/musicGroup/[0-9]+/edit, roles: ROLE_ADMIN }
+         - { path: ^/musicGroup/[0-9]+, roles: ROLE_ADMIN, methods: [POST]}
+
+        # User Access
+         - { path: ^/user/liked, roles: ROLE_USER, methods: [GET]}
+         - { path: ^/user, roles: ROLE_ADMIN, methods: [GET]}
+         - { path: ^/user/profil, roles: ROLE_USER, methods: [GET]}
+         - { path: ^/user/[0-9]+/edit, roles: ROLE_USER }
+         - { path: ^/user/[0-9]+, roles: ROLE_USER, methods: [POST,GET]}
 when@test:
     security:
         password_hashers:
