@@ -24,19 +24,24 @@ class MusicGroup
     #[ORM\Column(length: 2083, nullable: true)]
     private ?string $picture = null;
 
-    #[ORM\OneToOne(mappedBy: 'musicGroup', cascade: ['persist', 'remove'])]
-    private ?Artist $artist = null;
-
     #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'musicGroup')]
     private Collection $tags;
 
     #[ORM\OneToMany(mappedBy: 'musicGroup', targetEntity: Concert::class, orphanRemoval: true)]
     private Collection $concerts;
 
+    #[ORM\OneToMany(mappedBy: 'musicGroup', targetEntity: Artist::class, orphanRemoval: true)]
+    private Collection $artists;
+
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'likedMusicGroups')]
+    private Collection $users;
+
     public function __construct()
     {
         $this->tags = new ArrayCollection();
         $this->concerts = new ArrayCollection();
+        $this->artists = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -76,28 +81,6 @@ class MusicGroup
     public function setPicture(?string $picture): self
     {
         $this->picture = $picture;
-
-        return $this;
-    }
-
-    public function getArtist(): ?Artist
-    {
-        return $this->artist;
-    }
-
-    public function setArtist(?Artist $artist): self
-    {
-        // unset the owning side of the relation if necessary
-        if ($artist === null && $this->artist !== null) {
-            $this->artist->setMusicGroup(null);
-        }
-
-        // set the owning side of the relation if necessary
-        if ($artist !== null && $artist->getMusicGroup() !== $this) {
-            $artist->setMusicGroup($this);
-        }
-
-        $this->artist = $artist;
 
         return $this;
     }
@@ -154,6 +137,63 @@ class MusicGroup
             if ($concert->getMusicGroup() === $this) {
                 $concert->setMusicGroup(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Artist>
+     */
+    public function getArtists(): Collection
+    {
+        return $this->artists;
+    }
+
+    public function addArtist(Artist $artist): self
+    {
+        if (!$this->artists->contains($artist)) {
+            $this->artists->add($artist);
+            $artist->setMusicGroup($this);
+        }
+
+        return $this;
+    }
+
+    public function removeArtist(Artist $artist): self
+    {
+        if ($this->artists->removeElement($artist)) {
+            // set the owning side to null (unless already changed)
+            if ($artist->getMusicGroup() === $this) {
+                $artist->setMusicGroup(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->addLikedMusicGroup($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeLikedMusicGroup($this);
         }
 
         return $this;

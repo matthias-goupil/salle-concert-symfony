@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MusicGroup{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="admin-bar">
+            <a href="{{ path('app_music_group_index') }}">Liste des groupes de musiques</a>
+            <a href="{{ path('app_music_group_edit', {'id': music_group.id}) }}">modifier</a>
+            {{ include('music_group/_delete_form.html.twig') }}
+        </div>
+    {% endif %}
+
+    <div class="banner">
+        <h1>{{ music_group.stageName }}</h1>
+        <img src="/media/{{ music_group.picture }}" alt=""/>
+    </div>
+
+    {% if is_granted('ROLE_USER') %}
+        {% for liked in app.user.likedMusicGroups %}
+            {% if liked.id == music_group.id %}
+                <p><a href="{{ path("app_music_group_remove_favorite",{id: liked.id}) }}">Elevez le groupe des favoris</a></p>
+            {% endif %}
+        {% else %}
+            <a href="{{ path("app_music_group_add_favorite",{id: music_group.id}) }}">Ajouter le groupe aux favoris</a>
+        {% endfor %}
+    {% endif %}
+
+    <h2>Description</h2>
+    <p>{{ music_group.description }}</p>
+
+    <h2>Les artistes du groupe :</h2>
+    <div class="artists">
+        {% for artist in music_group.artists %}
+            <a href="{{ path('app_artist_show',{id: artist.id}) }}" class="artist">
+                <div>
+                    <img src="/media/{{ artist.picture!=null?artist.getPicture():'aucun.png' }}">
+                </div>
+                <p>{{ artist.firstname }} {{ artist.lastname }}</p>
+            </a>
+        {% endfor %}
+    </div>
+
+    <h2>Concerts à venir</h2>
+    <div class="concerts">
+
+        {% for concert in music_group.concerts | filter(c => c.date |date('U') >= "now"|date('U')) %}
+            <a href="{{ path('app_concert_show', {'id': concert.id}) }}" class="concert">
+                <div>
+                    <img src="/media/{{ concert.picture!=null?concert.getPicture():'aucun.png' }}">
+                </div>
+                <p>{{ concert.musicGroup.stageName }}</p>
+                <p>Le {{ concert.date |date('d-m-Y') }}</p>
+            </a>
+        {% else %}
+            <p>Aucun concert de prévu pour le moment</p>
+        {% endfor %}
+    </div>
+    <h2>Anciens concerts </h2>
+    <div class="concerts">
+        {% for concert in music_group.concerts | filter(c => c.date |date('U') < "now"|date('U')) %}
+            <a href="{{ path('app_concert_show', {'id': concert.id}) }}" class="concert">
+                <div>
+                    <img src="/media/{{ concert.picture!=null?concert.getPicture():'aucun.png' }}">
+                </div>
+                <p>{{ concert.musicGroup.stageName }}</p>
+                <p>Le {{ concert.date |date('d-m-Y') }}</p>
+            </a>
+        {% else %}
+            <p>Aucun concert de prévu pour le moment</p>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+
+

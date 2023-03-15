@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Artist{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_ADMIN')%}
+
+    <div class="admin-bar">
+        <a href="{{ path('app_artist_index') }}">Liste des artistes</a>
+    </div>
+{% endif %}
+    <h1>Créer un artiste</h1>
+
+    {{ include('artist/_form.html.twig') }}
+{% endblock %}

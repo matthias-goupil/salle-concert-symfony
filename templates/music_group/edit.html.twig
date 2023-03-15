@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit MusicGroup{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_ADMIN')%}
+
+    <div class="admin-bar">
+        <a href="{{ path('app_music_group_index') }}">Liste des groupes de musique</a>
+        <a href="{{ path('app_music_group_show', {'id': music_group.id}) }}">montrer</a>
+        {{ include('music_group/_delete_form.html.twig') }}
+    </div>
+    {% endif %}
+    <h1>Modifier le groupe de musique</h1>
+
+    {{ include('music_group/_form.html.twig', {'button_label': 'Update'}) }}
+
+
+{% endblock %}

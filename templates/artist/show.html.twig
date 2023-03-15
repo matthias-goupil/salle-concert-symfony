@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Artist{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_ADMIN')%}
+
+    <div class="admin-bar">
+        <a href="{{ path('app_artist_index') }}">Liste des artistes</a>
+        <a href="{{ path('app_artist_edit', {'id': artist.id}) }}">modifier</a>
+        {{ include('artist/_delete_form.html.twig') }}
+    </div>
+    {% endif %}
+    <div class="flex-row">
+        <img src="/media/{{ artist.picture }}" alt="">
+        <div class="flex-column artist-description">
+            <h2>{{ artist.firstname }} {{ artist.lastname }}</h2>
+            <p>{{ artist.description }}</p>
+        </div>
+    </div>
+
+    <h2>Groupe de musique</h2>
+    <a href="{{ path('app_music_group_show', {'id': artist.musicGroup.id}) }}" class="concert">
+        <div>
+            <img src="/media/{{ artist.musicGroup.picture!=null?artist.musicGroup.getPicture():'aucun.png' }}">
+        </div>
+        <p>{{ artist.musicGroup.stageName }}</p>
+    </a>
+{% endblock %}

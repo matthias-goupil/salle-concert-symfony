@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit User{% endblock %}
+
+{% block body %}
+    {% if is_granted('ROLE_ADMIN')%}
+        <div class="admin-bar">
+            <a href="{{ path('app_user_index') }}">Liste des utilisateurs</a>
+            <a href="{{ path('app_user_show', {'id': user.id}) }}">montrer</a>
+            {{ include('user/_delete_form.html.twig') }}
+        </div>
+    {% endif %}
+    <h1>Modifier le profil utilisateur</h1>
+
+    {{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
+{% endblock %}

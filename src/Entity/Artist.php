@@ -25,7 +25,8 @@ class Artist
     #[ORM\Column(length: 2000, nullable: true)]
     private ?string $description = null;
 
-    #[ORM\OneToOne(inversedBy: 'artist', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(inversedBy: 'artists')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?MusicGroup $musicGroup = null;
 
     public function getId(): ?int
